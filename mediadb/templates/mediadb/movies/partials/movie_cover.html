@@ -1,0 +1,23 @@
+{% load tmdb_tags %}
+{% load custom_tags %}
+
+<div class="movCover well" style="display: inline-block; float:left; width:{{width}}px; height:{{width|mult:1.5}}px;">
+	<div class="poster-container" style='background: url("{% tmdbPosterURL 300 movie.json.poster_path %}") center center / cover no-repeat'>
+		{% if not movie.json.poster_path %}
+			<img data-src="holder.js/100%x100%/text:{{movie.title}}/sky" />
+		{% endif %}
+	</div>
+	
+	<div class="adorn-frame">
+		{% if movie.get_ripped %}
+			<div class="adorn">
+				{{ "film"|fa }}
+			</div>
+		{% endif %}
+		{% if movie.get_index %}
+			<div class="adorn bl">
+				<span style="font-size: 14px; font-weight: bold;">{{movie.get_index}}</span>
+			</div>
+		{% endif %}
+	</div>
+</div>

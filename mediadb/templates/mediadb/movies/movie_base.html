@@ -1,0 +1,15 @@
+{% extends 'mediadb/layout_col.html' %}
+
+{% block pageLess %}
+	body {
+		background: url("{{bg}}") #444 center center / cover no-repeat fixed;
+	}
+	#header .title {
+		
+	}
+{% endblock %}
+
+{% block title %}
+	{{block.super}}
+	: {{movie.title}}
+{% endblock %}

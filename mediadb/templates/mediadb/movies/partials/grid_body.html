@@ -1,0 +1,19 @@
+{% load custom_tags %}
+
+<div id="iwrapper" class="fs_wrapper">
+	{% for mov in movies %}
+		<div class="movGridItemCont real" data-pk="{{ mov.pk }}" data-title="{{ mov.title }}" data-index="{{ mov.get_index }}" data-genre="{% collect_movie_genres mov %}">
+			<a href="{% url 'mediadb:movie:show' mov.id %}" class="movGridItem" style="width: {{poster_width}}px;">
+				{% with mov.json as json %}
+					{% include "mediadb/movies/partials/movie_cover.html" with movie=mov width=poster_width only %}
+				{% endwith %}
+			</a>
+		</div>
+	{% endfor %}
+
+	{% for i in 20|get_range %}
+		<p class="movGridItemCont extra" style="width: {{poster_width}}px;"></p>
+	{% endfor %}
+	<div class="movGridItemCont extra" style="width: 100%;"></div>
+	<br class="clearfix"/>
+</div>

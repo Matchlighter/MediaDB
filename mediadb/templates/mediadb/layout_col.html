@@ -1,0 +1,32 @@
+{% extends 'mediadb/layout.html' %}
+
+{% block nav-inner %}
+	<div class="container">
+		{{ block.super }}
+	</div>
+{% endblock %}
+
+{% block page %}
+<div id="content_wrapper" style="margin-top: 20px;">
+	{% block full_header %}
+	<div class="container">
+		<div id="header" class="">
+			{% block header %}
+				<h1 class="title" style="display: inline-block;">{{page_title}}</h1>
+				<div class="pull-right">
+					{% block headerRight %}{% endblock %}
+				</div>
+			{% endblock %}
+		</div>
+	</div>
+	{% endblock %}
+
+	{% block full_content %}
+	<div class="container">
+		<div class="well">
+			{% block content %}{% endblock %}
+		</div>
+	</div>
+	{% endblock full_content %}
+</div>
+{% endblock %}

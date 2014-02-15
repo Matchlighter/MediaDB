@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load less %}
+{% load custom_tags %}
+
+<html>
+<head>
+	<title>{% block title %}Movie Database{% endblock %}</title>
+	{% block css %}
+	
+	<link href="{% static 'dist/data_tables/css/jquery.dataTables.css' %}" rel="stylesheet" />
+	<link href="{% static 'dist/jquery-ui/css/jquery-ui-1.10.4.custom.css' %}" rel="stylesheet" />
+	<link href="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.css" rel="stylesheet" />
+	<link href="{% static 'dist/jstree/themes/default/style.min.css' %}" rel="stylesheet" />
+	<link rel="stylesheet" href="{{ STATIC_URL}}{% less 'mediadb/less/screen.less' %}" />
+	<link rel="stylesheet" href="{{ STATIC_URL}}{% less 'dist/font-awesome-4.0.3/less/font-awesome.less' %}" />
+	<style>
+		{% inlineless %}
+		{% block pageLess %}{% endblock %}
+		{% endinlineless %}
+	</style>
+	{% endblock %}
+
+	{% block js %}
+	<script src="{% static 'dist/jquery-2.0.3.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/jquery-ui/js/jquery-ui-1.10.4.custom.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/bootstrap3/js/bootstrap.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/typeahead.js/typeahead.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/holder.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/hogan-2.0.0.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/strftime.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/data_tables/js/jquery.dataTables.js' %}" type="text/javascript"></script>
+	
+	<script src="{% static 'dist/jScrollPane/mwheelIntent.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/jScrollPane/jquery.mousewheel.js' %}" type="text/javascript"></script>
+	<script src="{% static 'dist/jScrollPane/jquery.jscrollpane.min.js' %}" type="text/javascript"></script>
+	<script src="http://cdn.jsdelivr.net/qtip2/2.2.0/jquery.qtip.js" type="text/javascript"></script>
+
+	<script src="{% static 'dist/jstree/jstree.min.js' %}" type="text/javascript"></script>
+	
+	<script type="text/javascript">
+		$(function () {
+			{% block loadedJS %}{% endblock %}
+		});
+	</script>
+	{% endblock %}
+</head>
+<body>
+	<div class="hidden">
+		{% block templates %}
+		{% endblock %}
+	</div>
+	{% block body %}
+	<div id="wrapper">
+		<div class="navbar navbar-inverse navbar-fixed-top">
+			<div class="navbar-inner">
+				{% block nav-inner %}
+					<a class="brand navbar-brand" href="{% url 'mediadb:index' %}">Movie Database</a>
+					<ul class="nav navbar-nav">
+						{% block nav %}
+						<li><a href="{% url 'mediadb:index' v='list' %}">List</a></li>
+						<li><a href="{% url 'mediadb:index' v='grid' %}">Grid</a></li>
+						<li><a href="{% url 'mediadb:index' v='plainlist' %}">Full List</a></li>
+						{% endblock %}
+					</ul>
+					<div class="pull-right">
+						{% block rightNav %}
+						<div class="btn-group navbar-btn">
+							<a class="btn btn-success" href="{% url 'mediadb:movie:new' %}">{{ "plus"|fa }} Add Movie</a>
+							
+							<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown">
+								<span class="caret"></span>
+								<span class="sr-only">Toggle Dropdown</span>
+							</button>
+							<ul class="dropdown-menu pull-right" role="menu" style="text-align: right;">
+								<li><a href="{% url 'mediadb:series:new' %}">Add TV Show {{ "film fa-fw"|fa }}</a></li>
+								<li class="divider"></li>
+								<li><a href="#">Add Location {{ "folder-o fa-fw"|fa }}</a></li>
+								<li><a href="#">Add Media Format {{ "hdd-o fa-fw"|fa }}</a></li>
+							</ul>
+						</div>
+						{% endblock %}
+					</div>
+				{% endblock %}
+			</div>
+		</div>
+		{% block page %}{% endblock page %}
+	</div>
+	{% endblock body %}
+</body>
+</html>

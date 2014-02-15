@@ -1,0 +1,138 @@
+{% extends 'mediadb/layout_col.html' %}
+{% load staticfiles %}
+
+{% block js %}
+	{{ block.super }}
+	<script src="{% static 'mediadb/js/inlines.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+<script type="javascript">
+{% block loadedJS %}
+	{{ block.super }}
+	$(".series_tree li:has(ul)").on('click', function(evt) {
+		if (evt.target != evt.currentTarget) return;
+		var $ul = $(this).children("ul");
+		var open = $ul.css("display") == "none" || $ul.find(".deleting").length > 0;
+		
+		$(this).toggleClass("open", open);
+		$(this).toggleClass("closed", !open);
+		return false;
+	});
+	
+	var rows = "#{{SeasonFormSet.prefix}}-group > ul > li:not(.empty-form)";
+	
+	function addSubHooks(row) {
+		row.find(".delete").click(function(e) {
+			var self = $(this);
+			var row = self.closest("li");
+			
+			var dcb = row.find("> div .actualDeleteField input[type='checkbox']");
+			var todelete = !dcb.prop('checked');
+			dcb.prop('checked', todelete);
+			self.html(todelete ? "Will Delete" : "Delete");
+			
+			row.toggleClass("deleting", todelete);
+		});
+		row.find(".actualDeleteField input[type='checkbox']:checked").closest("div").find(".delete").html("Will Delete").closest("li").addClass("deleting");
+		row.find(".medium_tree").sortable();
+		row.find(".subrow").each(function () {
+			var srow = $(this);
+			var sul = srow.children("ul");
+			var prefix = srow.attr("id");
+			
+			sul.children("li").formset({
+				prefix: prefix,
+				addButton: srow.find("> div .add_btn"),
+				formCssClass: "dynamic-"+prefix,
+				getDeleteBtn: function ($row, opts) {
+					var $del = $row.find("> div .delete");
+					$del.html("Remove");
+					return $del;
+				},
+				deleteText: "Remove",
+				emptyCssClass: "empty-form",
+			});
+		});
+	}
+	
+	$(rows).each(function () {
+		addSubHooks($(this));
+	});
+	
+	$(rows).formset({
+		prefix: "{{SeasonFormSet.prefix}}",
+		addButton: $(".addSeason"),
+		formCssClass: "dynamic-{{SeasonFormSet.prefix}}",
+		getDeleteBtn: function ($row, opts) {
+			var $del = $row.find("> div .delete");
+			$del.html("Remove");
+			return $del;
+		},
+		deleteText: "Remove",
+		emptyCssClass: "empty-form",
+		added: addSubHooks,
+	});
+{% endblock %}
+</script>
+
+{% block content %}
+	{{ form }}
+	
+	<h2 class="">Seasons:</h2>
+	<div style="text-align: right; margin: -30px 10px 10px 0px;">
+		<a class="add_btn addSeason"><i class="fa fa-plus"></i> Add Season</a>
+	</div>
+	<div id="{{SeasonFormSet.prefix}}-group" class="series_tree clearfix">
+		{{ SeasonFormSet.management_form }}
+		<ul>
+		{% for ssnFrm in SeasonFormSet %}
+			<li id="{{ssnFrm.prefix}}" class="{% if forloop.last %} empty-form{% endif %} closed">
+				<div style="display: inline-block" id="{{ssnFrm.prefix}}-group" class="content">
+					{{ ssnFrm.mediaSet.management_form }}
+					{{ ssnFrm.episodeSet.management_form }}
+					Season 2 - 2013
+					{% include "mediadb/tvseries/partials/tree_form_header.html" with form=ssnFrm only %}
+				</div>
+				<ul>
+					<li id="{{ssnFrm.mediaSet.prefix}}" class="subrow closed">
+						<div class="content">
+							<div>Mediums</div>
+							<div class="pull-right">
+								<a class="add_btn"><i class="fa fa-plus"></i> Add Medium</a>
+							</div>
+						</div>
+						<ul class="medium_tree">
+							{% for mediaFrm in ssnFrm.mediaSet %}
+								<li id="{{mediaFrm.prefix}}" class="{% if forloop.last %} empty-form{% endif %}">
+									<div class="content">
+										<div>Binder A - 1</div>
+										{% include "mediadb/tvseries/partials/tree_form_header.html" with form=mediaFrm only %}
+									</div>
+								</li>
+							{% endfor %}
+						</ul>
+					</li>
+					<li id="{{ssnFrm.episodeSet.prefix}}" class="subrow open">
+						<div class="content">
+							<div>Episodes</div>
+							<div class="pull-right">
+								<a class="add_btn"><i class="fa fa-plus"></i> Add Episode</a>
+							</div>
+						</div>
+						<ul>
+							{% for epFrm in ssnFrm.episodeSet %}
+							<li id="{{epFrm.prefix}}" class="{% if forloop.last %} empty-form{% endif %}">
+								<div class="content">
+									<div>Episode 01 : Pilot</div>
+									{% include "mediadb/tvseries/partials/tree_form_header.html" with form=epFrm only %}
+								</div>
+							</li>
+							{% endfor %}
+						</ul>
+					</li>
+				</ul>
+			</li>
+		{% endfor %}
+		</ul>
+	</div>
+{% endblock %}

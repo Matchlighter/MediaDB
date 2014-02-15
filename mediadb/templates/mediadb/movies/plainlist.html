@@ -1,0 +1,48 @@
+{% extends "mediadb/layout_col.html" %}
+
+{% block headerRight %}
+	{{ block.super }}
+		<form action="" method="GET" class="form form-inline" style="margin: 15px 0 0 0">
+			<div class="input-group">
+				<input class="form-control" name="q" type="text" placeholder="Search..." value="{{term}}">
+				
+				<span class="input-group-btn">
+					<button class="btn btn-success" type="submit">Go</button>
+				</span>
+			</div>
+		</form>
+{% endblock %}
+
+{% block loadedJS %}
+	{{block.super}}
+
+	$("table.table").dataTable({
+		"aaSorting": [[3,'asc']],
+		"bPaginate": false
+	});
+{% endblock %}
+
+{% block content %}
+<table class="table table-striped table-condensed">
+	<thead>
+		<th style="width: 4em;">Index</th>
+		<th style="width: 6em;">Loc</th>
+		<th style="width: 4em;">Idex2</th>
+		<th>Name</th>
+		<th style="width: 8em;">Format</th>
+		<th style="width: 8em;">Ripped</th>
+	</thead>
+	<tbody>
+{% for movie in movies %}
+		<tr>
+			<td>{{movie.get_index}}</td>
+			<td>{{movie.primaryMO.location}}</td>
+			<td>{{movie.primaryMO.index}}</td>
+			<td><a href="{% url 'mediadb:movie:show' movie.id %}">{{movie.title}}</a></td>
+			<td>{{movie.format}}</td>
+			<td>{{movie.ripped|yesno|title}}</td>
+		</tr>
+{% endfor %}
+	</tbody>
+</table>
+{% endblock %}

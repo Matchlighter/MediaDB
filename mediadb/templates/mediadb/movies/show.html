@@ -1,0 +1,42 @@
+{% extends 'mediadb/movies/movie_base.html' %}
+{% load custom_tags %}
+
+{% block loadedJS %}
+	$("#btnDelete").click(function () {
+		var btnDel = $("#btnDelete");
+		var dngr = !btnDel.parent().hasClass('btn-group');
+		btnDel.children('.content').html(dngr ? 'Really?' : 'Delete');
+		btnDel.parent().toggleClass('btn-group')
+		btnDel.animate({right: dngr ? '100%':0});
+	});
+	$('#btnDelete').parent().css('width', $('#btnDelete').outerWidth())
+{% endblock %}
+
+{% block headerRight %}
+	<div style="margin: 15px 0 0 0">
+		{% if movie.ripped %}
+			<div class="btn btn-success">
+				{{ "film"|fa }}
+			</div>
+		{% endif %}
+		
+		{% if movie.tmdb_id %}
+			<a class="btn btn-info" href="http://www.themoviedb.org/movie/{{movie.tmdb_id}}">{{ "desktop"|fa }} Go to TMDB</a>
+		{% endif %}
+		<div class="" style="display: inline-block; position: relative;">
+			<span id="btnDelete" class="btn btn-warning" style="position: absolute; white-space: nowrap; right: 0; z-index:3">{{ "trash-o"|fa }} <span class="content">Delete</span></span>
+			<a id="btnDeleteConfirm" class="btn btn-danger" style="" href="{% url 'mediadb:movie:delete' movie.id %}">Confirm</a>
+		</div>
+		<a class="btn btn-info" href="{% url 'mediadb:movie:edit' movie.id %}">{{ "pencil"|fa }} Edit</a>
+	</div>
+{% endblock %}
+
+{% block content %}
+	{% include "mediadb/movies/partials/movie_cover.html" with movie=movie width=200 only %}
+	
+	<div>
+		<h1>{{movie.title}}</h1>
+		<p>{{movie.json.overview}}</p>
+	</div>
+	<br class="flatclear" />
+{% endblock %}

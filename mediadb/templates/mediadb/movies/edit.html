@@ -1,0 +1,68 @@
+{% extends 'mediadb/movies/movie_base.html' %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_field %}
+
+{% block js %}
+	{{ block.super }}
+	<script src="{% static 'mediadb/js/inlines.js' %}" type="text/javascript"></script>
+{% endblock %}
+
+<script type="javascript">
+{% block loadedJS %}
+	{{ block.super }}
+	$("#id_title").typeahead({
+		name: 'movies',
+		remote: '{% url 'mediadb:ajax:tmdbSearch' %}?q=%QUERY',
+		valueKey: 'title',
+		engine: Hogan,
+		{% verbatim %}
+		template: [
+			'<p class="mov_title">{{title}}<span class="mov_date">{{release_date}}</span></p>',
+			'<br class="flatclear" />',
+		].join(''), 
+		{% endverbatim %}
+	}).on('typeahead:selected', function (dsName, datum) {
+		$("#id_tmdb_id").val(datum['id']);
+	});
+	
+{% endblock %}
+</script>
+
+{% block full_content %}
+	<div class="container">
+	<!-- <form action="{{request.path}}" method="post" class="form"> -->
+		{# crispy form #}
+	<!-- </form> -->
+	<form action="{{request.path}}" method="post" class="form">
+		{% csrf_token %}
+		<div class="well">
+			<div class="form-group{% if form.tmdb_id.errors or form.title.errors %} has-error{% endif %}" style="margin: 0">
+				<div class="input-group">
+					<span class="input-group-btn">
+						<input id="id_tmdb_id" name="{{form.tmdb_id.html_name}}" placeholder="{{form.tmdb_id.label}}" type="text" class="form-control" style="width: 6em;"  value="{{form.tmdb_id.value|default:""}}">
+						<span></span>
+					</span>
+					<input id="id_title" name="{{form.title.html_name}}" placeholder="{{form.title.label}}" type="text" class="form-control" value="{{form.title.value}}">
+					
+				</div>
+				{% for e in form.tmdb_id.errors %}
+					<span class="help-block"><strong>{{e}}</strong></span>
+				{% endfor %}
+				{% for e in form.title.errors %}
+					<span class="help-block"><strong>{{e}}</strong></span>
+				{% endfor %}
+			</div>
+		</div>
+		
+		{% include "mediadb/movies/partials/edit_mediums.html" with media=media only %}
+		
+		<div class="well">
+			<div class="btn-toolbar">
+				<button type="submit" class="btn btn-primary">{{button}}</button>
+				<a href=".." class="btn btn-danger">Cancel</a>
+			</div>
+		</div>
+	</form>
+	</div>
+{% endblock %}

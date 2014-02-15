@@ -1,0 +1,13 @@
+<div class="pull-right">
+	<a class="delete">Delete</a>
+	<span class="hidden actualDeleteField">
+		{{ form.DELETE }}
+	</span>
+	{% if form.has_auto_field or form.needs_explicit_pk_field %}{{ form.pk_field.field }}{% endif %}
+	{{ form.fk_field.field }}
+	{% spaceless %}
+		{% for field in form %}
+			{% if field.is_hidden %} {{ field }} {% endif %}
+		{% endfor %}
+	{% endspaceless %}
+</div>

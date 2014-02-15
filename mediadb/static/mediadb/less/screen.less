@@ -1,0 +1,456 @@
+@import "../../dist/bootstrap3/less/bootstrap.less";
+@import "jquery.jscrollpane.less";
+
+.mov_date {
+	float: right;
+	font-style: italic;
+	font-size: 10px;
+	margin-left: 4px;
+}
+.flatclear {
+	height: 0;
+	display: block;
+	clear: both;
+}
+
+.dummy-button {
+	display:inline-block;
+	line-height:20px;
+	padding-top:7px;
+	padding-bottom:7px;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.abs-pos(@t, @r, @b, @l) {
+  top: @t;
+  right: @r;
+  bottom: @b;
+  left: @l;
+}
+
+.transition(@props) {
+	-moz-transition: @props;
+	-webkit-transition: @props;
+	-o-transition: @props;
+	transition: @props;
+}
+
+#header .title {
+	color: #FFF;
+	text-shadow: 0 0 10px #000, 0 0 30px #000;
+}
+
+.qtip-bootstrap {
+	.qtip-title {
+		h4 {
+			margin: 0;
+		}
+	}
+}
+
+.active_check {
+	.active &:after {
+		content: "\f14a";
+	}
+	&:after {
+		content: "\f0c8";
+	}
+}
+
+body {
+	background: #333;
+	
+	.grid_ui_addon {
+		color: #EEE;
+		padding: 10px;
+		background: rgba(0,0,0, 0.5);
+		position: fixed;
+	}
+	
+	.navbar-inner {
+		margin: 0 2%;
+		padding-right: 10px;
+	}
+	
+	.fs_wrapper {
+		margin: 0 2%;
+	}
+	
+	#grid_search {
+		padding-left: 20px;
+		padding-bottom: 4px;
+		border-top-left-radius: 5px;
+		bottom: 0;
+		right: 0;
+		width: 300px;
+		max-height: 75%;
+		
+		//opacity: 0.5;
+		.transition(opacity 1s);
+		&:hover {
+			opacity: 1;
+		}
+		.btn-default {
+			background: @input-group-addon-bg;
+		}
+		.dropdown-toggle {
+			background: @input-group-addon-bg;
+		}
+	}
+	
+	.grid_active_genres {
+		white-space: nowrap;
+		overflow: hidden;
+		
+		.genre-item {
+			display: inline-block;
+			cursor: pointer;
+			margin-right: 4px;
+		}
+	}
+	
+	.movGridItemCont {
+		.well {
+			.transition(box-shadow 0.3s);
+			box-shadow: 0px 0px 0px white;
+			&:hover {
+				box-shadow: 0px 0px 15px white;
+			}
+		}
+	}
+	
+	.series_tree {
+		border: 1px solid rgb(222, 222, 222);
+		ul {
+			list-style: none;
+			padding: 0px;
+			margin: 0;
+			background: url("../img/column.png") repeat-y 8px 0px;
+			> li:last-child div {
+				//border-bottom: 0px;
+			}
+			ul {
+				display: none;
+			}
+			.open > ul {
+				display: block;
+			}
+			li {
+				cursor: default;
+				background: url("../img/inset_row.png") no-repeat 8px 12px;
+				line-height: 16px;
+				padding-left: 15px;
+				display: block;
+				&.open {
+					background: url("../img/tree_collapse.png") no-repeat 2px 7px;
+				}
+				&.closed {
+					background: url("../img/tree_expand.png") no-repeat 2px 7px;
+				}
+				&.deleting .content {
+					background-color: @state-danger-bg;
+				}
+				&.empty-form {
+					display: none;
+				}
+				input {
+					margin-top: -3px;
+				}
+				div {
+					display: inline-block;
+					.pull-right {
+						margin-right: 10px;
+					}
+				}
+				> div {
+					height: 28px;
+					width: 100%;
+					background: white;
+					border-width: medium medium 1px 1px;
+					border-style: none none solid solid;
+					border-color: -moz-use-text-color -moz-use-text-color rgb(222, 222, 222) rgb(222, 222, 222);
+					
+					padding-top: 6px;
+					padding-left: 8px;
+					
+					background: none repeat scroll 0% 0% rgb(255, 255, 255);
+					border-color: rgb(229, 229, 229);
+					box-shadow: 1px 1px 0px rgb(255, 255, 255) inset;
+					text-shadow: 0px 1px rgba(255, 255, 255, 0.5);
+					
+					&:hover {
+						background-color: rgb(243, 243, 243);
+					}
+				}
+			}
+		}
+	}
+}
+
+.scroller {
+	margin-top: 4px;
+	line-height: 0;
+	.scroller-inner {
+		display: inline-block;
+	}
+}
+
+#genre_select_pane  {
+	border-radius: 5px;
+	padding: 5px 2px;
+	margin-top: 4px;
+	background: #EEE;
+	.inner {
+		color: #333;
+		height: 300px;
+		
+		.genre-list-item {
+			&:not(:first-child) {
+				border-top: 1px solid #DDD;
+			}
+			padding: 4px 8px;
+			
+			&.include {
+				background: @state-success-bg;
+				.genre-include {
+					color: @state-success-text;
+				}
+			}
+			&.exclude {
+				background: @state-danger-bg;
+				.genre-exclude {
+					color: @state-danger-text;
+				}
+			}
+			&.declude {
+				.genre-declude {
+					color: lighten(@state-warning-text, 15%);
+				}
+			}
+			
+			.opts {
+				float: right;
+				
+				i {
+					cursor: pointer;
+					color: #888;
+				}
+			}
+		}
+	}
+}
+
+#wrapper {
+	padding-top: 40px;
+}
+
+#iwrapper {
+	text-align: justify;
+	line-height: 0;
+	.movGridItemCont {
+		display: inline-block;
+		margin: 10px;
+		
+		&.extra {
+			margin-top: 0;
+			margin-bottom: 0;
+		}
+		
+		.movGridItem {
+			display: block;
+			margin-right: auto;
+			margin-left: auto;
+		}
+	}
+}
+
+.movCover {
+  position: relative;
+	overflow: hidden;
+	margin-bottom: 0px;
+	padding: 0px;
+	
+	.well & {
+		margin-right: 20px;
+		box-shadow: 2px 2px 5px rgb(136, 136, 136);
+	}
+  
+	.poster-container {
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+		img {
+			margin: 0;
+		}
+	}
+  
+  .adorn-frame {
+    .adorn {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.7);
+      width: 80px;
+      height: 80px;
+      border-radius: 40px;
+      display: block;
+      text-align: center;
+      
+      i, span {
+        color: #444;
+        line-height: 50px;
+        position: absolute;
+        display: block;
+        right: 27px;
+        top: 27px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    
+      &.tr, &:first-child { //Top-right
+        .abs-pos(-30px, -30px, inherit,inherit);
+        i, span {.abs-pos(27px, 27px, inherit,inherit);}
+      }
+      
+      &.br, &:nth-child(2) {
+        .abs-pos(inherit, -30px, -30px, inherit);
+        i, span {.abs-pos(inherit, 27px, 27px, inherit);}
+      }
+      
+      &.bl, &:nth-child(3) {
+        .abs-pos(inherit,inherit, -30px, -30px);
+        i, span {.abs-pos(inherit,inherit, 27px, 27px);}
+      }
+      
+      &.tl, &:nth-child(4) {
+        .abs-pos(-30px, inherit,inherit, -30px);
+        i, span {.abs-pos(27px, inherit,inherit, 27px);}
+      }
+    }
+  }
+}
+
+.required:after { content: '*'; margin: 0 0 0 5px; position: absolute; color: #ccc;}
+
+.inlineformset {
+  tbody {
+    label {
+      //display: none;
+    }
+    .checkbox label, .radio label {
+      display: inline;
+    }
+  }
+}
+
+.empty-form {
+  display: none;
+}
+
+[data-toggle="buttons"] input[type="radio"], [data-toggle="buttons"] input[type="checkbox"] {
+	display: none;
+}
+
+/* -------------------------- jScrollPane --------------------------------- */
+
+.jspVerticalBar {
+	background: none;
+	.jspTrack {
+		background: none;
+		.jspDrag {
+			background: #000;
+			//border: 1px solid #555;
+			border-radius: 5px;
+			width: 10px;
+			height: 10px;
+			margin: auto;
+			
+			opacity: 0.5;
+			.transition(opacity 0.25s);
+			&.jspHover, &.jspActive {
+				opacity: 1;
+			}
+		}
+	}
+}
+
+
+/* -------------------------- Type Ahead --------------------------------- */
+.twitter-typeahead {
+	margin-top: 4px;
+  width: 100%;
+  
+  .input-group &:last-child {
+    .tt-query {
+      .border-right-radius(@input-border-radius)
+    }
+  }
+  
+  .tt-dropdown-menu {
+    min-width: 160px;
+    padding: 5px 0;
+    background-color: @dropdown-bg;
+    border: 1px solid #ccc;
+    border: 1px solid @dropdown-border;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+    border-radius: 6px;
+    .box-shadow(0 5px 10px rgba(0,0,0,.2));
+    width: 100%;
+    -webkit-background-clip: padding-box;
+       -moz-background-clip: padding;
+            background-clip: padding-box;
+  }
+
+  .tt-suggestion {
+    display: block;
+    padding: 3px 20px;
+  }
+
+  .tt-hint {
+    .form-control;
+    .box-sizing(border-box);
+  }
+
+  .tt-suggestion.tt-is-under-cursor {
+    color: @dropdown-link-hover-color;
+    #gradient > .vertical(@dropdown-link-hover-bg, darken(@dropdown-link-hover-bg, 5%));
+  }
+
+  .tt-suggestion.tt-is-under-cursor a {
+    color: @dropdown-bg;
+  }
+
+  .tt-suggestion p {
+    margin: 0;
+  }
+}
+
+.twitter-typeahead .tt-hint
+{
+    display: block;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    border: 1px solid transparent;
+    border-radius:4px;
+}
+
+.twitter-typeahead .hint-small
+{
+    height: 30px;
+    padding: 5px 10px;
+    font-size: 12px;
+    border-radius: 3px;
+    line-height: 1.5;
+}
+
+.twitter-typeahead .hint-large
+{
+    height: 45px;
+    padding: 10px 16px;
+    font-size: 18px;
+    border-radius: 6px;
+    line-height: 1.33;
+}

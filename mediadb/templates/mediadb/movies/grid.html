@@ -1,0 +1,268 @@
+{% extends 'mediadb/layout.html' %}
+{% load tmdb_tags %}
+{% load custom_tags %}
+
+{% block pageLess %}
+
+#wrapper {
+	padding-top: 0px;
+}
+
+.navbar-fixed-top {
+	position: static;
+}
+
+{% endblock %}
+
+{% block templates %}
+	{{ block.super }}
+	{% verbatim %}
+		<div id="template_movie">
+			<div class="movGridItemCont real" data-pk="{{ id }}" data-title="{{ title }}" data-index="" data-genre="">
+				<a href="{{ url }}" class="movGridItem" style="">
+					<div class="movCover well" style="display: inline-block; float:left; width:190px; height:285px;">
+						<div class="poster-container" style='background: url("{{baseImageUrl}}{{poster_size}}{{poster_path}}") center center / cover no-repeat'>
+							{{^poster_path}}
+								<img data-src="holder.js/200x300/text:{{title}}/sky" />
+							{{/poster_path}}
+						</div>
+						
+						<div class="adorn-frame">
+							{{#ripped}}
+								<div class="adorn">
+									<i class="fa fa-film"></i>
+								</div>
+							{{/ripped}}
+							{% if movie.get_index %}
+								<div class="adorn bl">
+									<span style="font-size: 14px; font-weight: bold;">{{index}}</span>
+								</div>
+							{% endif %}
+						</div>
+					</div>
+				</a>
+			</div>
+		</div>
+	{% endverbatim %}
+{% endblock %}
+
+<script>
+{% block loadedJS %}
+	{{block.super}}
+		
+	var activeGenresSel = '.grid_active_genres .genre-item';
+	
+	var textFilter = '';
+	
+	/*var movie_tag_template = Hogan.compile($("#template_movie").html());
+	$.ajax('{% url "mediadb:ajax:movie:gridList" %}').done(function (data) {
+		for (var index in data.media) {
+			var movie = data.media[index];
+			var ctext = {
+				'poster_size': 'w342',
+				'baseImageUrl': data.options.baseImageUrl,
+			};
+			$("#iwrapper").prepend(movie_tag_template.render($.extend(movie, ctext)));
+		}
+	});*/
+	
+	function checkMovie($movie) {
+		if (!($movie.data('title').toLowerCase().contains(textFilter.toLowerCase()) || $movie.data('index').contains(textFilter)))
+			return false;
+			
+		var allow = true;
+			
+		var m_genres = $movie.data('genre').split(',');
+		$(activeGenresSel).each(function () {
+			var $gen = $(this);
+			var mhas = false;
+			for (var i=0; i<m_genres.length; i++) {
+				if (m_genres[i].toLowerCase() == $gen.data('genre').toLowerCase()) {
+					mhas = true;
+					break;
+				}
+			}
+			if ((mhas && $gen.data('clude')==false) || (!mhas && $gen.data('clude')==true))
+				allow = false;
+		});
+		return allow;
+	}
+	
+	function applyFilters() {
+		$('#iwrapper .movGridItemCont.real').each(function (idex) {
+			var $movie = $(this);
+			$movie.toggle(checkMovie($movie));
+		});
+	}
+	
+	$('#grid_search input').keyup(function () {
+		var $this = $(this);
+		textFilter = $this.val();
+		applyFilters();
+	});
+	
+	function removeFilter(genre) {
+		var $item = $('#genre_select_pane .genre-list-item[data-genre="'+genre+'"]');
+		$item.toggleClass('include', false).toggleClass('exclude', false).toggleClass('declude', true);
+		
+		$(activeGenresSel+'[data-genre="'+genre+'"]').remove();
+		applyFilters();
+	}
+	
+	{% verbatim %}
+	var genre_tag_template = Hogan.compile('<div class="genre-item label label-{{style}}" data-clude="{{clude}}" data-genre="{{genre}}">{{genre}}</div>');
+	var popover_title_template = Hogan.compile('<h4>{{title}}</h4>');
+	var popover_content_template = Hogan.compile('{{overview}}');
+	{% endverbatim %}
+	
+	$('#genre_select_pane .inner').jScrollPane({});
+	$('#genre_select_pane').css("display", 'none');
+	
+	$('#genre_select_pane .genre-list-item .opts i').on('click', function () {
+		var $this = $(this);
+		var $item = $this.closest('.genre-list-item');
+		
+		var genre = $item.data('genre');
+		$('.grid_active_genres .genre-item[data-genre="'+genre+'"]').remove();
+		
+		var rawclude = $this.data('clude');
+		if (rawclude == 'de') {
+			removeFilter($item.data('genre'));
+			return;
+		}
+		var clude = rawclude == 'in';
+		$item.toggleClass('include', false).toggleClass('exclude', false).toggleClass('declude', false).toggleClass(rawclude+'clude', true);
+		
+		var rend = genre_tag_template.render({
+			style: clude ? 'success' : 'danger',
+			clude: clude,
+			genre: genre
+		});
+		$('.grid_active_genres .scroller-inner').append($(rend).on('click', function () {
+			removeFilter($(this).data('genre'));
+		}));
+		applyFilters();
+	});
+	
+	function toggleGenresMenu() {
+		var $pane = $('#genre_select_pane');
+		var showing = $pane.css('display')=='none';
+		$pane.slideToggle();
+		$('#grid_search .input-group-btn').toggleClass('dropup');
+	}
+	
+	$('#grid_search .dropdown-toggle').on('click', toggleGenresMenu);
+	
+	function onMovieInit() {
+		$('#iwrapper .movGridItemCont.real').qtip({
+			content: {
+				title: function(evt, api) {
+					var $el = $(this);
+					return popover_title_template.render({
+						title: $(this).data('title'),
+					});
+				},
+				text: function (evt, api) {
+					var url = '{% url "mediadb:ajax:movie:details" pk="001" %}';
+					$.ajax({ url: url.replace('001', $(this).data('pk')) })
+						.done(function(data) {
+							if (data == null) {
+								api.set('content.text', 'No info available.');
+							} else {
+								var overview = data.overview.length > 200 ? data.overview.substring(0, 200)+'...' : data.overview;
+								api.set('content.text', popover_content_template.render({
+									data: data,
+									overview: overview,
+								}));
+							}
+						})
+						.fail(function(xhr, status, error) {
+							api.set('content.text', status + ': ' + error)
+						})
+					return '';
+				},
+			},
+			style: {
+				classes: 'qtip-bootstrap',
+			},
+			position: {
+				at: 'right center',
+				my: 'left center',
+				viewport: $(window),
+			},
+			events: {
+				show: function(evt, api) {
+					if (!$('#popover-toggle').hasClass('active'))
+						evt.preventDefault();
+				},
+			}
+		});
+		Holder.run();
+	};
+	{% if ajax_load %}$("#wwrapper").load('{% url "mediadb:gridBody" %} #iwrapper', onMovieInit);{% else %}onMovieInit();{% endif %}
+	
+{% endblock %}
+</script>
+
+{% block page %}
+	<div id="wwrapper" class="">
+		{% if ajax_load %}
+		<div class="loading" style="position: fixed; left: 50%; top: 40%">
+			<div style="position: relative; left: -50%;">
+				<h1 style="color: gray; text-shadow: 0.05em 0.05em 0.02em #000; font-size: 75px;"><i class="fa fa-spinner fa-spin"></i></h1>
+			</div>
+		</div>
+		{% else %}
+		{% include "mediadb/movies/partials/grid_body.html" %}
+		{% endif %}
+	</div>
+{% endblock %}
+
+{% block body %}
+	{{block.super}}
+	<div id="grid_search" class="grid_ui_addon">
+		<div class="input-group">
+			<div class="btn-group" style="padding-right: 5px; display: table-cell;">
+				<button id="popover-toggle" type="button" class="btn btn-default active" data-toggle="button">
+					{{ "comment"|fa }}
+					<i class="fa active_check"></i>
+					<span class="sr-only">Toggle Dropdown</span>
+				</button>
+			</div>
+			<div class="btn-group" style="width: 100%; display: table-cell;">
+				<div class="input-group">
+				
+					<span class="input-group-addon">{{"search"|fa}}</span>
+					
+					<input type="text" class="form-control" placeholder="Search">
+					
+					<div class="input-group-btn dropup">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span>
+							<span class="sr-only">Toggle Dropdown</span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="grid_active_genres scroller">
+			<div class="scroller-inner">
+				
+			</div>
+		</div>
+		<div id="genre_select_pane" style="">
+			<div class="inner">
+			{% for genre in genres_list %}
+				<div class="genre-list-item declude" data-genre="{{ genre }}">
+					{{ genre }}
+					<div class="opts">
+						<i class="fa fa-minus-square genre-exclude" data-clude="ex"></i>
+						<i class="fa fa-square genre-declude" data-clude="de"></i>
+						<i class="fa fa-plus-square genre-include" data-clude="in"></i>
+					</div>
+				</div>
+			{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endblock %}
