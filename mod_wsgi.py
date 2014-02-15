@@ -15,9 +15,9 @@ framework.
 """
 import os
 import sys
-import settings
+#import settings
 
-path = settings.APP_ROOT
+path = os.path.dirname(__file__) #settings.APP_ROOT
 activate_env=os.path.join(path, "env/bin/activate_this.py")
 execfile(activate_env, dict(__file__=activate_env))
 
