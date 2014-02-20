@@ -1,0 +1,27 @@
+{% load widget_tweaks %}
+
+<div class="form-group{% if form.format.errors or form.index.errors %} has-error{% endif %}" style="margin: 0">
+	<div style="width:150px; display: inline-block;">{{ form.location.label_tag }}</div>
+	<div style="display: inline-block;">{{ form.index.label_tag }}</div>
+	<div class="input-group" style="margin-bottom: 20px;">
+		<span class="input-group-btn">
+			{% render_field form.location class+="form-control" style+="width: 150px;" %}
+			<span></span>
+		</span>
+		{% render_field form.index class+="form-control" %}
+	</div>
+	
+	<div style="width:150px; display: inline-block;">{{ form.format.label_tag }}</div>
+	<div style="display: inline-block;">{{ form.type.label_tag }}</div>
+	<div class="input-group">
+		<span class="input-group-btn">
+			{% render_field form.format class+="form-control" style+="width: 150px;" %}
+			<span></span>
+		</span>
+		{% render_field form.type class+="form-control" %}
+		<span class="input-group-addon">
+			Ripped:
+			{% render_field form.ripped %}
+		</span>
+	</div>
+</div>

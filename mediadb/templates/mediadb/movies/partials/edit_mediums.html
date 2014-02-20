@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load custom_tags %}
-{% load crispy_forms_tags %}
-{% load crispy_forms_field %}
+{% load widget_tweaks %}
+
 
 <div id="{{media.prefix}}-group" class="inlineformset panel panel-default">
 	{{ media.management_form }}
@@ -57,16 +57,24 @@
 						{% if not mdfrm.preexist %}
 							<div class="tab-content">
 								<div class="tab-pane pane1 {% if mdfrm.new_type.value == '1' %}active{% endif %}">
-									{% crispy mdfrm.medium_form %}
+									{# mdfrm.medium_form #}
+									{% include "mediadb/movies/partials/medium_form.html" with form=mdfrm.medium_form only %}
 								</div>
 								<div class="tab-pane pane2 {% if mdfrm.new_type.value == '2' %}active{% endif %}">
-									{{ mdfrm.loc_srch }}
-									{{ mdfrm.index_srch }}
+									<div class="input-group" style="">
+										<span class="input-group-btn">
+											{% render_field mdfrm.loc_srch class+="form-control" style+="width: 150px;" %}
+											<span></span>
+										</span>
+										{% render_field mdfrm.index_srch class+="form-control" %}
+									</div>
 								</div>
 							</div>
 						{% else %}
 							<div class="medium-form">
-								{% crispy mdfrm.medium_form %}
+								{# mdfrm.medium_form #}
+								
+								{% include "mediadb/movies/partials/medium_form.html" with form=mdfrm.medium_form only %}
 							</div>
 						{% endif %}
 					</div>

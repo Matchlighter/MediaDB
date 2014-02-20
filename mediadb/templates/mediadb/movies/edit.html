@@ -1,7 +1,6 @@
 {% extends 'mediadb/movies/movie_base.html' %}
 {% load staticfiles %}
-{% load crispy_forms_tags %}
-{% load crispy_forms_field %}
+{% load widget_tweaks %}
 
 {% block js %}
 	{{ block.super }}
@@ -31,19 +30,18 @@
 
 {% block full_content %}
 	<div class="container">
-	<!-- <form action="{{request.path}}" method="post" class="form"> -->
-		{# crispy form #}
-	<!-- </form> -->
 	<form action="{{request.path}}" method="post" class="form">
 		{% csrf_token %}
 		<div class="well">
 			<div class="form-group{% if form.tmdb_id.errors or form.title.errors %} has-error{% endif %}" style="margin: 0">
+				<div style="width:6em; display: inline-block;">{{ form.tmdb_id.label_tag }}</div>
+				<div style="display: inline-block;">{{ form.title.label_tag }}</div>
 				<div class="input-group">
 					<span class="input-group-btn">
-						<input id="id_tmdb_id" name="{{form.tmdb_id.html_name}}" placeholder="{{form.tmdb_id.label}}" type="text" class="form-control" style="width: 6em;"  value="{{form.tmdb_id.value|default:""}}">
+						{% render_field form.tmdb_id class+="form-control" style+="width: 6em;" %}
 						<span></span>
 					</span>
-					<input id="id_title" name="{{form.title.html_name}}" placeholder="{{form.title.label}}" type="text" class="form-control" value="{{form.title.value}}">
+					{% render_field form.title class+="form-control" %}
 					
 				</div>
 				{% for e in form.tmdb_id.errors %}

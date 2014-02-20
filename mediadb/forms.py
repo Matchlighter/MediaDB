@@ -1,6 +1,5 @@
 from django.forms.models import BaseInlineFormSet, model_to_dict
 from django.core.exceptions import ValidationError
-from crispy_forms.helper import FormHelper
 from django import forms
 from models import *
 
@@ -77,8 +76,6 @@ class MediumForm(ModelForm):
 		
 	def __init__(self, *pargs, **kwargs):
 		super(MediumForm, self).__init__(*pargs, **kwargs)
-		self.helper = FormHelper()
-		self.helper.form_tag = False
 		
 class MovieForm(ModelForm):
 	class Meta:

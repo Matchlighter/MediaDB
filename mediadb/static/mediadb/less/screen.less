@@ -377,8 +377,11 @@ body {
 
 /* -------------------------- Type Ahead --------------------------------- */
 .twitter-typeahead {
-	margin-top: 4px;
   width: 100%;
+  
+  .form-control {
+	float: none;
+  }
   
   .input-group &:last-child {
     .tt-query {
@@ -435,6 +438,7 @@ body {
     line-height: 1.428571429;
     border: 1px solid transparent;
     border-radius:4px;
+	width: 100%;
 }
 
 .twitter-typeahead .hint-small
