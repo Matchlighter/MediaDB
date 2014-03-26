@@ -11,7 +11,7 @@ env/
 bin/
 build/
 develop-eggs/
-dist/
+#dist/
 eggs/
 lib/
 lib64/
@@ -50,7 +50,8 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-settings.py
-media/*
-static/*
+
+/settings.py
+/media/*
+/static/*
 
