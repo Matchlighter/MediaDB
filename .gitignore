@@ -50,5 +50,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
-
+settings.py
+media/*
+static/*
 

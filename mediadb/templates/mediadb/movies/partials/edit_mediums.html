@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 
 
-<div id="{{media.prefix}}-group" class="inlineformset panel panel-default">
+<div id="{{media.prefix}}-group" class="inlineformset panel panel-default darkclear">
 	{{ media.management_form }}
 	<div class="panel-heading">
 		<h4 class="dummy-button">Physical Mediums</h4>
@@ -11,78 +11,78 @@
 		<div class="clearfix"></div>
 	</div>
 	
-	<table class="panel-body" style="width:100%;">
-		<tbody>
-		{% for mdfrm in media %}
-			<tr class='{% if forloop.last %} empty-form{% endif %} {% if mdfrm.errors %}danger{% endif %}' id='{{mdfrm.prefix}}'><td>
-				<div class="panel panel-{% if mdfrm.errors %}danger{% else %}default{% endif %}">
-				
-					<div class="panel-heading" style="{%if not mdfrm.preexist %}padding-bottom:0;{% endif %}">
-						<div class="btn-toolbar pull-right">
-							<div class="btn-group field-DELETE">
-								<a class="btn btn-danger btn-delete">
-									Delete
-								</a>
-							</div>
+	<div id="{{media.prefix}}-group" class="mediums-panel">
+	{% for mdfrm in media %}
+		<div id='{{mdfrm.prefix}}' class="panel-wrapper{% if forloop.last %} empty-form{% endif %}">
+			<div class="panel panel-{% if mdfrm.errors %}danger{% else %}default{% endif %}">
+			
+				<div class="panel-heading" style="{%if not mdfrm.preexist %}padding-bottom:0;{% endif %}">
+					<div class="btn-toolbar pull-right">
+						<div class="btn-group field-DELETE">
+							<a class="btn btn-danger btn-delete">
+								Delete
+							</a>
 						</div>
-						
-						{% if not mdfrm.preexist %}
-							<ul class="modeSel nav nav-tabs" data-toggle="buttons" style="margin-bottom: -11px;">
-								{% for radio in mdfrm.new_type %}
-									<li class=" {% if radio.is_checked %} active{% endif %}">
-										<a data-toggle="tab" data-target=".pane{{radio.choice_value}}">
-											<label>{{ radio.tag }} {{ radio.choice_label }}</label>
-										</a>
-									</li>
-								{% endfor %}
-							</ul>
-						{% else %}
-							<h3 style="display:inline-block; line-height:20px; padding-top:7px; padding-bottom:7px;" class="panel-title">{% if mdfrm.preexist %}{{mdfrm.instance}}{% else %}New Medium{% endif %}</h3>
-						{% endif %}
-						
-						<span class="hidden actualDeleteField">
-							{{ mdfrm.DELETE }}
-						</span>
-						{% if mdfrm.has_auto_field or mdfrm.needs_explicit_pk_field %}{{ mdfrm.pk_field.field }}{% endif %}
-						{{ mdfrm.fk_field.field }}
-						{% spaceless %}
-							{% for field in mdfrm %}
-								{% if field.is_hidden %} {{ field }} {% endif %}
-							{% endfor %}
-						{% endspaceless %}
-						<br style="clear:both; display:block; height:0;" />
 					</div>
 					
-					<div class="panel-body">
-						{% if not mdfrm.preexist %}
-							<div class="tab-content">
-								<div class="tab-pane pane1 {% if mdfrm.new_type.value == '1' %}active{% endif %}">
-									{# mdfrm.medium_form #}
-									{% include "mediadb/movies/partials/medium_form.html" with form=mdfrm.medium_form only %}
-								</div>
-								<div class="tab-pane pane2 {% if mdfrm.new_type.value == '2' %}active{% endif %}">
-									<div class="input-group" style="">
-										<span class="input-group-btn">
-											{% render_field mdfrm.loc_srch class+="form-control" style+="width: 150px;" %}
-											<span></span>
-										</span>
-										{% render_field mdfrm.index_srch class+="form-control" %}
-									</div>
-								</div>
-							</div>
-						{% else %}
-							<div class="medium-form">
+					{% if not mdfrm.preexist %}
+						<ul class="modeSel nav nav-tabs" data-toggle="buttons" style="margin-bottom: -11px;">
+							{% for radio in mdfrm.new_type %}
+								<li class=" {% if radio.is_checked %} active{% endif %}">
+									<a data-toggle="tab" data-target=".pane{{radio.choice_value}}">
+										<label>{{ radio.tag }} {{ radio.choice_label }}</label>
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					{% else %}
+						<h3 style="display:inline-block; line-height:20px; padding-top:7px; padding-bottom:7px;" class="panel-title">{% if mdfrm.preexist %}{{mdfrm.instance}}{% else %}New Medium{% endif %}</h3>
+					{% endif %}
+					
+					<span class="hidden actualDeleteField">
+						{{ mdfrm.DELETE }}
+					</span>
+					{% if mdfrm.has_auto_field or mdfrm.needs_explicit_pk_field %}{{ mdfrm.pk_field.field }}{% endif %}
+					{{ mdfrm.fk_field.field }}
+					{% spaceless %}
+						{% for field in mdfrm %}
+							{% if field.is_hidden %} {{ field }} {% endif %}
+						{% endfor %}
+					{% endspaceless %}
+					<br style="clear:both; display:block; height:0;" />
+				</div>
+				
+				<div class="panel-body">
+					{% if not mdfrm.preexist %}
+						<div class="tab-content">
+							<div class="tab-pane pane1 {% if mdfrm.new_type.value == '1' %}active{% endif %}">
 								{# mdfrm.medium_form #}
-								
 								{% include "mediadb/movies/partials/medium_form.html" with form=mdfrm.medium_form only %}
 							</div>
-						{% endif %}
-					</div>
+							<div class="tab-pane pane2 {% if mdfrm.new_type.value == '2' %}active{% endif %}">
+								<div class="input-group" style="">
+									<span class="input-group-btn">
+										{% render_field mdfrm.loc_srch class+="form-control" style+="width: 150px;" %}
+										<span></span>
+									</span>
+									{% render_field mdfrm.index_srch class+="form-control" %}
+								</div>
+							</div>
+						</div>
+					{% else %}
+						<div class="medium-form">
+							{# mdfrm.medium_form #}
+							
+							{% include "mediadb/movies/partials/medium_form.html" with form=mdfrm.medium_form only %}
+						</div>
+					{% endif %}
 				</div>
-			</td></tr>
-		{% endfor %}
-		</tbody>
-	</table>
+			</div>
+		</div>
+	{% endfor %}
+	<div class="clearfix"></div>
+	</div>
+	
 	<div class="panel-footer">
 	
 		<a href="javascript:void(0)" class="addInlineMedium btn btn-primary pull-right">{{ "plus"|fa }} Add another</a>
@@ -93,7 +93,7 @@
 <script type="text/javascript">
 	(function($) {
 		$(document).ready(function($) {
-			var rows = "#{{media.prefix}}-group tbody tr";
+			var rows = "#{{media.prefix}}-group div.panel-wrapper";
 			/*var alternatingRows = function(row) {
 				$(rows).not(".add-row").removeClass("row1 row2")
 					.filter(":even").addClass("row1").end()
@@ -153,13 +153,13 @@
 			
 			$(rows).find(".btn-delete").click(function(e) {
 				var self = $(this);
-				var row = self.parentsUntil("tbody").filter("tr");
+				var row = self.closest("div.panel");
 				var dcb = row.find(".actualDeleteField input[type='checkbox']");
 				var todelete = !dcb.prop('checked');
 				dcb.prop('checked', todelete);
 				self.html(todelete ? "Will Delete" : "Delete");
 				
-				row.find(".panel").toggleClass("panel-danger", todelete);
+				row.toggleClass("panel-danger", todelete);
 			});
 	
 			$(rows).formset({
@@ -171,6 +171,14 @@
 				deleteText: "Remove",
 				deleteHTML: '<a class="{deleteClass} btn btn-danger" href="javascript:void(0)">{deleteText}</a>',
 				emptyCssClass: "empty-form",
+				getDeleteBtn: function (row, options) { //Gets the delete button for a dynamic form.
+					delhtml = options.deleteHTML.replace("{deleteClass}", options.deleteCssClass).replace("{deleteText}", options.deleteText);
+					row.find(".field-DELETE").html(delhtml);
+					return row.find("a." + options.deleteCssClass);
+				},
+				added: function(row) {
+					row.css("height", row.outerHeight());
+				}
 				//removed: alternatingRows,
 				/*added: (function(row) {
 					initPrepopulatedFields(row);

@@ -26,7 +26,7 @@ def index(req, v=None):
 	context = {
 		'page_title': 'Movies',
 		'term': search,
-		'ajax_loading': False, # Toggle the use of AJAX. Makes the grid load faster initially.
+		'ajax_load': False, # Toggle the use of AJAX. Makes the grid load faster initially.
 	}
 	
 	if not vmode == 'grid' or not context.get('ajax_load'):
@@ -37,7 +37,7 @@ def index(req, v=None):
 		if vmode == 'list':
 			pager = Paginator(movs, 20)
 			page = req.GET.get('p')
-	
+			
 			try:
 				movs = pager.page(page)
 			except PageNotAnInteger:

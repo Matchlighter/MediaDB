@@ -115,7 +115,12 @@
 	var popover_content_template = Hogan.compile('{{overview}}');
 	{% endverbatim %}
 	
-	$('#genre_select_pane .inner').jScrollPane({});
+	//$('#genre_select_pane .inner').jScrollPane({});
+	$('#genre_select_pane .inner').mCustomScrollbar({
+		theme:"dark-thick",
+		scrollInertia: 300,
+		contentTouchScroll: true,
+	});
 	$('#genre_select_pane').css("display", 'none');
 	
 	$('#genre_select_pane .genre-list-item .opts i').on('click', function () {
@@ -207,13 +212,13 @@
 {% block page %}
 	<div id="wwrapper" class="">
 		{% if ajax_load %}
-		<div class="loading" style="position: fixed; left: 50%; top: 40%">
-			<div style="position: relative; left: -50%;">
-				<h1 style="color: gray; text-shadow: 0.05em 0.05em 0.02em #000; font-size: 75px;"><i class="fa fa-spinner fa-spin"></i></h1>
+			<div class="loading" style="position: fixed; left: 50%; top: 40%">
+				<div style="position: relative; left: -50%;">
+					<h1 style="color: gray; text-shadow: 0.05em 0.05em 0.02em #000; font-size: 75px;"><i class="fa fa-spinner fa-spin"></i></h1>
+				</div>
 			</div>
-		</div>
 		{% else %}
-		{% include "mediadb/movies/partials/grid_body.html" %}
+			{% include "mediadb/movies/partials/grid_body.html" %}
 		{% endif %}
 	</div>
 {% endblock %}
@@ -234,7 +239,7 @@
 				
 					<span class="input-group-addon">{{"search"|fa}}</span>
 					
-					<input type="text" class="form-control" placeholder="Search">
+					<input type="text" class="form-control" placeholder="Search" autofocus="autofocus">
 					
 					<div class="input-group-btn dropup">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">

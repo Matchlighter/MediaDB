@@ -1,6 +1,6 @@
 {% load widget_tweaks %}
 
-<div class="form-group{% if form.format.errors or form.index.errors %} has-error{% endif %}" style="margin: 0">
+<div class="form-group{% if form.format.errors or form.index.errors %} has-error{% endif %}" style="margin: 0;">
 	<div style="width:150px; display: inline-block;">{{ form.location.label_tag }}</div>
 	<div style="display: inline-block;">{{ form.index.label_tag }}</div>
 	<div class="input-group" style="margin-bottom: 20px;">
@@ -11,11 +11,11 @@
 		{% render_field form.index class+="form-control" %}
 	</div>
 	
-	<div style="width:150px; display: inline-block;">{{ form.format.label_tag }}</div>
+	<div style="width:120px; display: inline-block;">{{ form.format.label_tag }}</div>
 	<div style="display: inline-block;">{{ form.type.label_tag }}</div>
 	<div class="input-group">
 		<span class="input-group-btn">
-			{% render_field form.format class+="form-control" style+="width: 150px;" %}
+			{% render_field form.format class+="form-control" style+="width: 120px;" %}
 			<span></span>
 		</span>
 		{% render_field form.type class+="form-control" %}
