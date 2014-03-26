@@ -84,7 +84,7 @@ class Movie(MediaBase):
 
 	cached_json = None
 	@property
-	def json(self):
+	def json(self, allow_pull=True):
 		if self.tmdb_id and self.cached_json is None:
 			jsonPath = self.get_json_path()
 			if not os.path.exists(jsonPath):
