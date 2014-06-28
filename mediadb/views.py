@@ -126,7 +126,7 @@ def delete(req, pk):
 	except Movie.DoesNotExist:
 		pass
 		
-	return redirect(reverse('mediadb:movie:index'))
+	return redirect(reverse('mediadb:index'))
 
 def tv_show(req, pk):
 	pass
